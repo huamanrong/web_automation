@@ -10,6 +10,7 @@ driver=None
 
 @pytest.fixture
 def login_web():
+    global driver
     # 打开浏览器
     driver = webdriver.Chrome()
     driver.maximize_window()
@@ -23,6 +24,7 @@ def login_web():
 
 @pytest.fixture
 def init_web():
+    global driver
     # 打开浏览器
     driver = webdriver.Chrome()
     driver.maximize_window()
@@ -40,6 +42,7 @@ def add_cookie_to_be_in_login_state(url,cookie_dict):
     :param cookie_dict: 比如{'name' : 'foo', 'value' : 'bar'}，如果cookie有多个，就用元组传入
     :return:
     '''
+    global driver
     driver=webdriver.Chrome()
     driver.maximize_window()
     driver.get(url)
@@ -49,6 +52,8 @@ def add_cookie_to_be_in_login_state(url,cookie_dict):
             driver.add_cookie(cookie)
     else:
         driver.add_cookie(cookie_dict)
+    yield driver
+    driver.quit()
 
 #往pytest的测试报告中，当失败的时候 ，添加截图
 @pytest.mark.hookwrapper

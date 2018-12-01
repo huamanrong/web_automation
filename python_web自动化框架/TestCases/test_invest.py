@@ -21,22 +21,13 @@ import pytest
 from PageObjects.home_page import HomePage
 from PageObjects.user_page import UserPage
 from PageObjects.bid_page import BidPage
-from Common import logger
 import logging
 from TestDatas.invest_data import *
-
-def hello():
-    pass
-
-@pytest.mark.smoke
-def test_hello():
-    hello()
 
 @pytest.mark.usefixtures("login_web")
 class Test_Invest:
 
     @pytest.mark.smoke
-    #@pytest.mark.usefixtures("login_web")
     def test_invest_success(self,login_web):
         '''
         首页 - 选择第一个标，的抢投标按钮
@@ -53,7 +44,8 @@ class Test_Invest:
         money_afterInvest = UserPage(login_web).get_userLeftMoney()
         try:
             logging.info("开始比对：比对用户余额是否减少了投资的金额。")
-            assert int(float(money_beforeInvest) - float(money_afterInvest)) == success_data["invest_money"]
+            # assert int(float(money_beforeInvest) - float(money_afterInvest)) == success_data["invest_money"]
+            assert False
         except Exception as e:
             logging.exception("比对失败：")
             raise e
