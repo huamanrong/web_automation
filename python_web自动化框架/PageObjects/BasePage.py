@@ -37,7 +37,7 @@ class BasePage:
             logging.info("等待结束，等待开始时间：{0}，结束等待时间：{1}等待时间长为: {2}".format(t1, t2, t2 - t1))
         except TimeoutException as e:
             logging.exception("等待元素超时.截取当前页面。")
-            self.save_screenshot()
+            self.save_screenshots()
             #抛出异常
             raise e
         except InvalidSelectorException as e:
@@ -57,7 +57,7 @@ class BasePage:
             logging.info("等待结束。等待开始时间：{0}，结束等待时间：{1}等待时间长为: {2}".format(t1, t2, t2 - t1))
         except TimeoutException as e:
             logging.exception("等待元素存在超时.截取当前页面。")
-            self.save_screenshot()
+            self.save_screenshots()
             # 抛出异常
             raise e
         except InvalidSelectorException as e:
@@ -86,7 +86,7 @@ class BasePage:
             return ele
         except NoSuchElementException as e:
             logging.exception("元素查找失败，找不到该元素。开始截取当前页面图像：")
-            self.save_screenshot()
+            self.save_screenshots()
             raise e
 
     #查找多个元素
@@ -103,7 +103,7 @@ class BasePage:
             return eles
         except Exception as e:
             logging.exception("元素查找失败。找不到与表达式 {0} 匹配的元素。")
-            self.save_screenshot()
+            self.save_screenshots()
             raise e
 
     # 获取当前页面的url
@@ -125,7 +125,7 @@ class BasePage:
             ele.click()
         except Exception as e:
             logging.exception("点击操作失败。")
-            self.save_screenshot()
+            self.save_screenshots()
             raise e
 
     def input_text(self,locator,text,by=By.XPATH,wait_times=40,type="visible",scroll=False):
@@ -146,7 +146,7 @@ class BasePage:
             ele.send_keys(text)
         except Exception as e:
             logging.exception("输入操作失败。")
-            self.save_screenshot()
+            self.save_screenshots()
             raise e
 
     def get_text(self,locator,by=By.XPATH,wait_times=40,type="visible",scroll=False):
@@ -158,7 +158,7 @@ class BasePage:
             return ele.text
         except Exception as e:
             logging.exception("获取元素的文本内容失败：")
-            self.save_screenshot()
+            self.save_screenshots()
             raise e
 
     #获取元素的属性值
@@ -171,7 +171,7 @@ class BasePage:
             return ele.get_attribute(atrribute_name)
         except Exception as e:
             logging.exception("获取属性值失败：")
-            self.save_screenshot()
+            self.save_screenshots()
             raise e
 
     #处理alert弹出框
@@ -187,7 +187,7 @@ class BasePage:
         return message
 
     #截图函数
-    def save_screenshot(self):
+    def save_screenshots(self):
         r = ""
         for index in range(3):
             r += str(random.randint(1000, 10000))

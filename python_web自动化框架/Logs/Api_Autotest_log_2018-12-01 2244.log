@@ -1,0 +1,86 @@
+ Sat, 01 Dec 2018 22:44:46  INFO logger.py <module> [ line:23 ] hehehe
+ Sat, 01 Dec 2018 22:44:56  INFO login_page.py login [ line:20 ] 登陆页面：登陆功能。
+ Sat, 01 Dec 2018 22:44:56  INFO BasePage.py input_text [ line:141 ] =====执行输入操作======
+输入的数据为：18684720553
+ Sat, 01 Dec 2018 22:44:56  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name="phone"]
+ Sat, 01 Dec 2018 22:44:56  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:44:56  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675496.874568，结束等待时间：1543675496.923601等待时间长为: 0.04903292655944824
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py input_text [ line:141 ] =====执行输入操作======
+输入的数据为：python
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name="password"]
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675497.039683，结束等待时间：1543675497.07971等待时间长为: 0.04002690315246582
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py click [ line:120 ] =====执行点击事件======
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//button
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675497.166778，结束等待时间：1543675497.209803等待时间长为: 0.04302501678466797
+ Sat, 01 Dec 2018 22:44:57  INFO home_page.py click_firstBid [ line:20 ] 首页：点击第一个标的投抢标按钮。
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py click [ line:120 ] =====执行点击事件======
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//a[text()="抢投标"]
+ Sat, 01 Dec 2018 22:44:57  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:45:19  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675497.320881，结束等待时间：1543675519.1281等待时间长为: 21.8072190284729
+ Sat, 01 Dec 2018 22:45:19  INFO BasePage.py scroll_intoView [ line:115 ] 将元素滚动到可见区域。
+ Sat, 01 Dec 2018 22:45:40  INFO bid_page.py get_userLeftMoney [ line:20 ] 标详情页面：获取用户可用余额。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py get_element_attribute [ line:166 ] =====获取元素的属性值：data-amount
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@data-url="/Invest/invest"]
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675540.509194，结束等待时间：1543675540.543215等待时间长为: 0.03402113914489746
+ Sat, 01 Dec 2018 22:45:40  INFO bid_page.py invest [ line:26 ] 标页面：投资操作。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py input_text [ line:141 ] =====执行输入操作======
+输入的数据为：200
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@data-url="/Invest/invest"]
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675540.558229，结束等待时间：1543675540.575239等待时间长为: 0.017009973526000977
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py scroll_intoView [ line:115 ] 将元素滚动到可见区域。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py click [ line:120 ] =====执行点击事件======
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//button[text()='投标']
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675540.678311，结束等待时间：1543675540.73335等待时间长为: 0.0550389289855957
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py scroll_intoView [ line:115 ] 将元素滚动到可见区域。
+ Sat, 01 Dec 2018 22:45:40  INFO bid_page.py click_button_on_investSuccessPopup [ line:34 ] 标页面：投资成功，点击弹出框中的【查看并激活】按钮。
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py click [ line:120 ] =====执行点击事件======
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//div[contains(@class,"layui-layer-page")]//button
+ Sat, 01 Dec 2018 22:45:40  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:45:41  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675540.823414，结束等待时间：1543675541.883163等待时间长为: 1.059748888015747
+ Sat, 01 Dec 2018 22:46:13  INFO user_page.py get_userLeftMoney [ line:14 ] 用户个人页面：获取用户个人余额。
+ Sat, 01 Dec 2018 22:46:13  INFO BasePage.py get_text [ line:153 ] =====获取元素的文本内容======
+ Sat, 01 Dec 2018 22:46:13  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//*[@class="personal_info"]//li[@class="color_sub"]
+ Sat, 01 Dec 2018 22:46:13  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:46:13  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675573.093191，结束等待时间：1543675573.128217等待时间长为: 0.03502607345581055
+ Sat, 01 Dec 2018 22:46:13  INFO BasePage.py scroll_intoView [ line:115 ] 将元素滚动到可见区域。
+ Sat, 01 Dec 2018 22:46:13  INFO test_invest.py test_invest_success [ line:46 ] 开始比对：比对用户余额是否减少了投资的金额。
+ Sat, 01 Dec 2018 22:46:13  ERROR test_invest.py test_invest_success [ line:50 ] 比对失败：
+Traceback (most recent call last):
+  File "C:\Users\10336\Desktop\git_file\web_automation\python_web自动化框架\TestCases\test_invest.py", line 48, in test_invest_success
+    assert False
+AssertionError: assert False
+ Sat, 01 Dec 2018 22:46:24  INFO login_page.py login [ line:20 ] 登陆页面：登陆功能。
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py input_text [ line:141 ] =====执行输入操作======
+输入的数据为：18684720553
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name="phone"]
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675584.551281，结束等待时间：1543675584.589306等待时间长为: 0.0380251407623291
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py input_text [ line:141 ] =====执行输入操作======
+输入的数据为：python
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name="password"]
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675584.690378，结束等待时间：1543675584.732408等待时间长为: 0.04203009605407715
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py click [ line:120 ] =====执行点击事件======
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//button
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675584.823471，结束等待时间：1543675584.857497等待时间长为: 0.03402590751647949
+ Sat, 01 Dec 2018 22:46:24  INFO test_login.py test_login_success [ line:17 ] 断言：比对用户昵称是否相等。
+ Sat, 01 Dec 2018 22:46:24  INFO home_page.py get_nickname [ line:15 ] 首页：获取用户昵称！
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py get_text [ line:153 ] =====获取元素的文本内容======
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:77 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//a[@href="/Member/index.html"]
+ Sat, 01 Dec 2018 22:46:24  INFO BasePage.py find_element [ line:79 ] 开始等待元素在当前页面可见。
+ Sat, 01 Dec 2018 22:46:46  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待开始时间：1543675584.945558，结束等待时间：1543675606.520836等待时间长为: 21.57527804374695
+ Sat, 01 Dec 2018 22:46:46  ERROR test_login.py test_login_success [ line:20 ] 比对失败：
+Traceback (most recent call last):
+  File "C:\Users\10336\Desktop\git_file\web_automation\python_web自动化框架\TestCases\test_login.py", line 18, in test_login_success
+    assert HomePage(init_web).get_nickname() == success_data["check"]
+AssertionError: assert '我的帐户[小蜜蜂96029]' == '我的帐户[小蜜蜂96027]'
+  - 我的帐户[小蜜蜂96029]
+  ?             ^
+  + 我的帐户[小蜜蜂96027]
+  ?             ^
