@@ -2,5 +2,6 @@
   "TestCases/test_invest.py::Test_Invest::()::test_invest_success",
   "TestCases/test_login.py::Test_Login::()::test_login_success",
   "TestCases/test_login.py::Test_Login::()::test_login_noData[testDatas0]",
-  "TestCases/test_login.py::Test_Login::()::test_login_noData[testDatas1]"
+  "TestCases/test_login.py::Test_Login::()::test_login_noData[testDatas1]",
+  "TestCases/test_shopping_cart.py::Test_Shopping_cart::()::test_shopping_cart"
 ]

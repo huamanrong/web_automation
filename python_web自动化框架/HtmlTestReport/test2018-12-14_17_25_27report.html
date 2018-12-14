@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Test Report</title>
+    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+  <body onLoad="init()">
+    <script>/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+
+function toArray(iter) {
+    if (iter === null) {
+        return null;
+    }
+    return Array.prototype.slice.call(iter);
+}
+
+function find(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return elem.querySelector(selector);
+}
+
+function find_all(selector, elem) {
+    if (!elem) {
+        elem = document;
+    }
+    return toArray(elem.querySelectorAll(selector));
+}
+
+function sort_column(elem) {
+    toggle_sort_states(elem);
+    var colIndex = toArray(elem.parentNode.childNodes).indexOf(elem);
+    var key;
+    if (elem.classList.contains('numeric')) {
+        key = key_num;
+    } else if (elem.classList.contains('result')) {
+        key = key_result;
+    } else {
+        key = key_alpha;
+    }
+    sort_table(elem, key(colIndex));
+}
+
+function show_all_extras() {
+    find_all('.col-result').forEach(show_extras);
+}
+
+function hide_all_extras() {
+    find_all('.col-result').forEach(hide_extras);
+}
+
+function show_extras(colresult_elem) {
+    var extras = colresult_elem.parentNode.nextElementSibling;
+    var expandcollapse = colresult_elem.firstElementChild;
+    extras.classList.remove("collapsed");
+    expandcollapse.classList.remove("expander");
+    expandcollapse.classList.add("collapser");
+}
+
+function hide_extras(colresult_elem) {
+    var extras = colresult_elem.parentNode.nextElementSibling;
+    var expandcollapse = colresult_elem.firstElementChild;
+    extras.classList.add("collapsed");
+    expandcollapse.classList.remove("collapser");
+    expandcollapse.classList.add("expander");
+}
+
+function show_filters() {
+    var filter_items = document.getElementsByClassName('filter');
+    for (var i = 0; i < filter_items.length; i++)
+        filter_items[i].hidden = false;
+}
+
+function add_collapse() {
+    // Add links for show/hide all
+    var resulttable = find('table#results-table');
+    var showhideall = document.createElement("p");
+    showhideall.innerHTML = '<a href="javascript:show_all_extras()">Show all details</a> / ' +
+                            '<a href="javascript:hide_all_extras()">Hide all details</a>';
+    resulttable.parentElement.insertBefore(showhideall, resulttable);
+
+    // Add show/hide link to each result
+    find_all('.col-result').forEach(function(elem) {
+        var collapsed = get_query_parameter('collapsed') || 'Passed';
+        var extras = elem.parentNode.nextElementSibling;
+        var expandcollapse = document.createElement("span");
+        if (collapsed.includes(elem.innerHTML)) {
+            extras.classList.add("collapsed");
+            expandcollapse.classList.add("expander");
+        } else {
+            expandcollapse.classList.add("collapser");
+        }
+        elem.appendChild(expandcollapse);
+
+        elem.addEventListener("click", function(event) {
+            if (event.currentTarget.parentNode.nextElementSibling.classList.contains("collapsed")) {
+                show_extras(event.currentTarget);
+            } else {
+                hide_extras(event.currentTarget);
+            }
+        });
+    })
+}
+
+function get_query_parameter(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function init () {
+    reset_sort_headers();
+
+    add_collapse();
+
+    show_filters();
+
+    toggle_sort_states(find('.initial-sort'));
+
+    find_all('.sortable').forEach(function(elem) {
+        elem.addEventListener("click",
+                              function(event) {
+                                  sort_column(elem);
+                              }, false)
+    });
+
+};
+
+function sort_table(clicked, key_func) {
+    var rows = find_all('.results-table-row');
+    var reversed = !clicked.classList.contains('asc');
+    var sorted_rows = sort(rows, key_func, reversed);
+    /* Whole table is removed here because browsers acts much slower
+     * when appending existing elements.
+     */
+    var thead = document.getElementById("results-table-head");
+    document.getElementById('results-table').remove();
+    var parent = document.createElement("table");
+    parent.id = "results-table";
+    parent.appendChild(thead);
+    sorted_rows.forEach(function(elem) {
+        parent.appendChild(elem);
+    });
+    document.getElementsByTagName("BODY")[0].appendChild(parent);
+}
+
+function sort(items, key_func, reversed) {
+    var sort_array = items.map(function(item, i) {
+        return [key_func(item), i];
+    });
+    var multiplier = reversed ? -1 : 1;
+
+    sort_array.sort(function(a, b) {
+        var key_a = a[0];
+        var key_b = b[0];
+        return multiplier * (key_a >= key_b ? 1 : -1);
+    });
+
+    return sort_array.map(function(item) {
+        var index = item[1];
+        return items[index];
+    });
+}
+
+function key_alpha(col_index) {
+    return function(elem) {
+        return elem.childNodes[1].childNodes[col_index].firstChild.data.toLowerCase();
+    };
+}
+
+function key_num(col_index) {
+    return function(elem) {
+        return parseFloat(elem.childNodes[1].childNodes[col_index].firstChild.data);
+    };
+}
+
+function key_result(col_index) {
+    return function(elem) {
+        var strings = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed',
+                       'Skipped', 'Passed'];
+        return strings.indexOf(elem.childNodes[1].childNodes[col_index].firstChild.data);
+    };
+}
+
+function reset_sort_headers() {
+    find_all('.sort-icon').forEach(function(elem) {
+        elem.parentNode.removeChild(elem);
+    });
+    find_all('.sortable').forEach(function(elem) {
+        var icon = document.createElement("div");
+        icon.className = "sort-icon";
+        icon.textContent = "vvv";
+        elem.insertBefore(icon, elem.firstChild);
+        elem.classList.remove("desc", "active");
+        elem.classList.add("asc", "inactive");
+    });
+}
+
+function toggle_sort_states(elem) {
+    //if active, toggle between asc and desc
+    if (elem.classList.contains('active')) {
+        elem.classList.toggle('asc');
+        elem.classList.toggle('desc');
+    }
+
+    //if inactive, reset all other functions and add ascending active
+    if (elem.classList.contains('inactive')) {
+        reset_sort_headers();
+        elem.classList.remove('inactive');
+        elem.classList.add('active');
+    }
+}
+
+function is_all_rows_hidden(value) {
+  return value.hidden == false;
+}
+
+function filter_table(elem) {
+    var outcome_att = "data-test-result";
+    var outcome = elem.getAttribute(outcome_att);
+    class_outcome = outcome + " results-table-row";
+    var outcome_rows = document.getElementsByClassName(class_outcome);
+
+    for(var i = 0; i < outcome_rows.length; i++){
+        outcome_rows[i].hidden = !elem.checked;
+    }
+
+    var rows = find_all('.results-table-row').filter(is_all_rows_hidden);
+    var all_rows_hidden = rows.length == 0 ? true : false;
+    var not_found_message = document.getElementById("not-found-message");
+    not_found_message.hidden = !all_rows_hidden;
+}
+</script>
+    <h1>test2018-12-14_17_25_27report.html</h1>
+    <p>Report generated on 14-Dec-2018 at 17:25:57 by<a href="https://pypi.python.org/pypi/pytest-html"> pytest-html</a> v1.19.0</p>
+    <h2>Environment</h2>
+    <table id="environment">
+      <tr>
+        <td>JAVA_HOME</td>
+        <td>C:\Program Files\Java\jdk1.8.0_131</td></tr>
+      <tr>
+        <td>Packages</td>
+        <td>{&apos;pluggy&apos;: &apos;0.8.0&apos;, &apos;pytest&apos;: &apos;3.9.3&apos;, &apos;py&apos;: &apos;1.7.0&apos;}</td></tr>
+      <tr>
+        <td>Platform</td>
+        <td>Windows-10-10.0.16299</td></tr>
+      <tr>
+        <td>Plugins</td>
+        <td>{&apos;html&apos;: &apos;1.19.0&apos;, &apos;metadata&apos;: &apos;1.7.0&apos;}</td></tr>
+      <tr>
+        <td>Python</td>
+        <td>3.4.4</td></tr></table>
+    <h2>Summary</h2>
+    <p>1 tests ran in 29.93 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="passed">0 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="failed">1 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
+    <h2>Results</h2>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable result initial-sort" col="result">Result</th>
+          <th class="sortable" col="name">Test</th>
+          <th class="sortable numeric" col="duration">Duration</th>
+          <th>Links</th></tr>
+        <tr hidden="true" id="not-found-message">
+          <th colspan="4">No results found. Try to check the filters</th></tr></thead>
+      <tbody class="failed results-table-row">
+        <tr>
+          <td class="col-result">Failed</td>
+          <td class="col-name">TestCases/test_shopping_cart.py::Test_Shopping_cart::()::test_shopping_cart</td>
+          <td class="col-duration">5.96</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="4">
+            <div><div><img src="D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\test_shopping_cart.py_Test_Shopping_cart_()_test_shopping_cart.png" alt="screenshot" style="width:304px;height:228px;" onclick="window.open(this.src)" align="right"/></div></div>
+            <div class="log">self = &lt;TestCases.test_shopping_cart.Test_Shopping_cart object at 0x000000000D420940&gt;<br/>login_web = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;5cef72bcadec6ee91799171274cda054&quot;)&gt;<br/><br/>    @pytest.mark.gg<br/>    @pytest.mark.usefixtures(&#x27;login_web&#x27;)<br/>    def test_shopping_cart(self,login_web):<br/>        home=HomePage(login_web)<br/>        home.click_head_mall_button()<br/>        mall=MallPage(login_web)<br/>        mall.search_goods()<br/>        mall.click_goods_picture()<br/>        details=GoodsDetailPage(login_web)<br/>        details.choose_specifications_and_num()<br/>        details.add_shopping_cat()<br/>        details.click_head_shopping_cart()<br/>        shopping_cart_page=ShoppingCartPage(login_web)<br/>        sku_num=shopping_cart_page.get_goods_sku_num()<br/>        nick_shopping_cart=shopping_cart_page.get_nickname_of_shopping_cart()<br/>        head_nickname=shopping_cart_page.get_head_nickname()<br/>        shopping_cart_page.check_all_choose()<br/>        selected_goods=shopping_cart_page.get_selected_goods_num()<br/>        shopping_cart_beside_num=shopping_cart_page.nick_of_shopping_beside_num()<br/>        assert str(shopping_cart_beside_num) == str(sku_num)<br/>        assert head_nickname in nick_shopping_cart<br/>&gt;       assert str(selected_goods) == str(sku_num)<br/><span class="error">E       AssertionError: assert &#x27;20&#x27; == &#x27;2&#x27;</span><br/><span class="error">E         - 20</span><br/><span class="error">E         + 2</span><br/><br/>TestCases\test_shopping_cart.py:31: AssertionError<br/>---------------------------- Captured stderr setup -----------------------------<br/> Fri, 14 Dec 2018 17:25:36  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:36  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//ul[@class=&#x27;headNav clearfix&#x27;]//a[text()=&#x27;登录&#x27;]
+ Fri, 14 Dec 2018 17:25:36  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.57秒
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：13819480751
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;user mobile&#x27;]
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.06秒
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：abc123
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name=&#x27;paswrd&#x27;]
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:37  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py get_verification_code [ line:232 ] 识别的验证码为：3189
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：3189
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:38  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:40  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:40  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:40  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:40  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+ Fri, 14 Dec 2018 17:25:40  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:40  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.03秒
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py get_verification_code [ line:232 ] 识别的验证码为：26hs
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：26hs
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:41  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:43  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:43  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:43  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.03秒
+ Fri, 14 Dec 2018 17:25:43  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+ Fri, 14 Dec 2018 17:25:43  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:43  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py get_verification_code [ line:232 ] 识别的验证码为：0645
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：0645
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:44  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:45  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:45  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:45  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.03秒
+ Fri, 14 Dec 2018 17:25:45  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+ Fri, 14 Dec 2018 17:25:45  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:45  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.05秒
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py get_verification_code [ line:232 ] 识别的验证码为：1463
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：1463
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:46  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+------------------------------ Captured log setup ------------------------------<br/>BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//ul[@class=&#x27;headNav clearfix&#x27;]//a[text()=&#x27;登录&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.57秒
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：13819480751
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;user mobile&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.06秒
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：abc123
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name=&#x27;paswrd&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                232 INFO     识别的验证码为：3189
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：3189
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.03秒
+BasePage.py                232 INFO     识别的验证码为：26hs
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：26hs
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.03秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                232 INFO     识别的验证码为：0645
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：0645
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.03秒
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.05秒
+BasePage.py                232 INFO     识别的验证码为：1463
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：1463
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;captchas&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class=&#x27;btn btn_c&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒----------------------------- Captured stderr call -----------------------------<br/> Fri, 14 Dec 2018 17:25:49  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:49  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//li[@class=&#x27;hot&#x27;]//a[text()=&#x27;秀百贝商城&#x27;]
+ Fri, 14 Dec 2018 17:25:49  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:49  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.06秒
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：妲己
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;search&#x27;]
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.05秒
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//i[@class=&#x27;s-icon i-search&#x27;]
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:50  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.11秒
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//div[@class=&#x27;goods-pic&#x27;]
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//li[text()=&#x27;18岁&#x27;]
+ Fri, 14 Dec 2018 17:25:51  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:1.27秒
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//li[text()=&#x27;18岁&#x27;]
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//span[@class=&#x27;num-add&#x27;]
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//span[@class=&#x27;num-add&#x27;]
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:52  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//a[@class=&#x27;join-cart login&#x27;]
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//li[@class=&#x27;nav-cart&#x27;]//a[contains(text(),&#x27;购物车&#x27;)]
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.09秒
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py get_text [ line:160 ] =====获取元素的文本内容======
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//h6[@class=&#x27;cart-tit&#x27;]
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:53  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py get_text [ line:160 ] =====获取元素的文本内容======
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//li[@class=&#x27;Unick&#x27;]/a
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//label[@class=&#x27;all-che&#x27;]
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py get_text [ line:160 ] =====获取元素的文本内容======
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//p[text()=&#x27;已选商品&#x27;]/span
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py get_text [ line:160 ] =====获取元素的文本内容======
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//h6[@class=&#x27;cart-tit&#x27;]//span
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Fri, 14 Dec 2018 17:25:54  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+------------------------------ Captured log call -------------------------------<br/>BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//li[@class=&#x27;hot&#x27;]//a[text()=&#x27;秀百贝商城&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.06秒
+BasePage.py                148 INFO     =====执行输入操作======
+输入的数据为：妲己
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id=&#x27;search&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.05秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//i[@class=&#x27;s-icon i-search&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.11秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//div[@class=&#x27;goods-pic&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//li[text()=&#x27;18岁&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:1.27秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//li[text()=&#x27;18岁&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//span[@class=&#x27;num-add&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//span[@class=&#x27;num-add&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.02秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//a[@class=&#x27;join-cart login&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//li[@class=&#x27;nav-cart&#x27;]//a[contains(text(),&#x27;购物车&#x27;)]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.09秒
+BasePage.py                160 INFO     =====获取元素的文本内容======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//h6[@class=&#x27;cart-tit&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                160 INFO     =====获取元素的文本内容======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//li[@class=&#x27;Unick&#x27;]/a
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                127 INFO     =====执行点击事件======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//label[@class=&#x27;all-che&#x27;]
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                160 INFO     =====获取元素的文本内容======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//p[text()=&#x27;已选商品&#x27;]/span
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒
+BasePage.py                160 INFO     =====获取元素的文本内容======
+BasePage.py                 84 INFO     当前元素定位类型：xpath，当前查找的元素表达式为：//h6[@class=&#x27;cart-tit&#x27;]//span
+BasePage.py                 86 INFO     开始等待元素在当前页面可见。
+BasePage.py                 37 INFO     等待结束，等待时间长为:0.04秒</div></td></tr></tbody></table></body></html>

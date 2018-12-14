@@ -34,7 +34,7 @@ class BasePage:
             WebDriverWait(self.driver,wait_times,1).until(EC.visibility_of_element_located((by,locator)))
             t2 = time.time()
             # 结束时间 - 两者之差就是真正的等待时间
-            logging.info("等待结束，等待开始时间：{0}，结束等待时间：{1}等待时间长为: {2}".format(t1, t2, t2 - t1))
+            logging.info("等待结束，等待时间长为:%.2f秒"%(t2-t1))
         except TimeoutException as e:
             logging.exception("等待元素超时.截取当前页面。")
             self.save_screenshots()
@@ -54,7 +54,7 @@ class BasePage:
             WebDriverWait(self.driver, wait_times, 1).until(EC.presence_of_element_located((by, locator)))
             t2 = time.time()
             # 结束时间 - 两者之差就是真正的等待时间
-            logging.info("等待结束。等待开始时间：{0}，结束等待时间：{1}等待时间长为: {2}".format(t1, t2, t2 - t1))
+            logging.info("等待结束，等待时间长为:%.2f秒"%(t2-t1))
         except TimeoutException as e:
             logging.exception("等待元素存在超时.截取当前页面。")
             self.save_screenshots()
@@ -63,6 +63,13 @@ class BasePage:
         except InvalidSelectorException as e:
             logging.exception("元素定位表达式：{0}  不正确，请修正".format(locator))
 
+    #等待新窗口是否打开
+    def wait_new_window_is_opened(self,current_handles):
+        WebDriverWait(self.driver,10,1).until(EC.new_window_is_opened(current_handles))
+
+    #等待iframe打开并切换
+    def wait_frame_to_be_available_and_switch_to(self,frame_locator):
+        WebDriverWait(self.driver,10,1).until(EC.frame_to_be_available_and_switch_to_it(frame_locator))
 
     #查找元素 - 一个元素
     def find_element(self,locator,by=By.XPATH,wait_times=40,type="visible"):
@@ -197,27 +204,27 @@ class BasePage:
         logging.info("已截取当前页面，文件路径：{0}".format(file_path))
 
     #返回图形验证码的内容
-    def get_screen(self,img_element,web_shot_path,img_shot_path):
+    def get_verification_code(self,img_element):
         '''
         :param img_element: 验证码的元素对象
         :param web_shot_path: 截取验证码所在网页的截图所存放的路径
         :param img_shot_path: 截取验证码的截图所存放的路径
         :return:返回图形验证码的内容
         '''
-        self.driver.save_screenshot(web_shot_path)  #截取当前网页，该网页有我们需要的验证码
+        self.driver.save_screenshot(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\gg.png')  #截取当前网页，该网页有我们需要的验证码
         location = img_element.location  #获取验证码x,y轴坐标
         size=img_element.size  #获取验证码的长宽
         coord=(int(location['x']),int(location['y']),int(location['x']+size['width']),int(location['y']+size['height'])) #写成我们需要截取的位置坐标
-        i=Image.open(web_shot_path) #打开截图
+        i=Image.open(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\gg.png') #打开截图
         frame4=i.crop(coord)  #使用Image的crop函数，从截图中再次截取我们需要的区域
         image=frame4.point(lambda x: 0 if x<143 else 255)#处理图片上的每个像素点，使图片上每个点“非黑即白”
         borderImage = ImageOps.expand(image,border=20,fill='white')
-        borderImage.save(img_shot_path)
-        img = Image.open(img_shot_path)
+        borderImage.save(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\pp.png')
+        img = Image.open(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\pp.png')
         aa =  pytesseract.image_to_string(img)
-        # if aa == "":               #如果识别为空，则再一次识别
-        #     img_element.click()
-        #     self.get_screen(self.driver)    #递归，再次调用本函数
+        if aa == "":               #如果识别为空，则再一次识别
+            img_element.click()
+            self.get_verification_code(self.driver)    #递归，再次调用本函数
         str_1=''
         for item in aa:
             if item.isdigit() or item.isalpha():

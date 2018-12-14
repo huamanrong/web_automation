@@ -1,7 +1,7 @@
 import pytest
 from selenium import webdriver
 from TestDatas.Common_Data import *
-from PageObjects.login_page import LoginPage
+from PageObjects.home_page import HomePage
 from Common.dir_config import screenshot_dir
 import time
 import os
@@ -15,9 +15,11 @@ def login_web():
     driver = webdriver.Chrome()
     driver.maximize_window()
     # 1、访问登陆页面
-    driver.get(url)
-    #driver.set_page_load_timeout(20)
-    LoginPage(driver).login(user,passwd)
+    driver.get(url_xb)
+    # driver.set_page_load_timeout(20)
+    home=HomePage(driver)
+    home.click_head_login_button(telephone,pwd)
+    home.head_login()
     yield driver
     #yield之后的代码，为环境清理工作
     driver.quit()

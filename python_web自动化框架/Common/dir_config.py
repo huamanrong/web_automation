@@ -17,3 +17,9 @@ logs_dir =  os.path.join(base_dir,"Logs")
 config_dir =  os.path.join(base_dir,"Config")
 
 screenshot_dir = os.path.join(base_dir,"ScreenShot")
+
+shot_verification_code_dir=os.path.join(base_dir,"ScreenShot","shot_verification")
+
+shot_photo_path=os.path.join(shot_verification_code_dir,'shot.png')
+
+save_photo_path=os.path.join(shot_verification_code_dir,'save.png')
