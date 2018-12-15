@@ -1,0 +1,47 @@
+ Sat, 15 Dec 2018 21:17:51  INFO logger.py <module> [ line:23 ] hehehe
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//ul[@class='headNav clearfix']//a[text()='登录']
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.05秒
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：13819480751
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class='user mobile']
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.06秒
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：abc123
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@name='paswrd']
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.05秒
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id='captchas']
+ Sat, 15 Dec 2018 21:18:02  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:03  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Sat, 15 Dec 2018 21:18:03  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+ Sat, 15 Dec 2018 21:18:03  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:03  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.05秒
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py get_verification_code [ line:232 ] 识别的验证码为：3029
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：3029
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id='captchas']
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class='btn btn_c']
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:05  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Sat, 15 Dec 2018 21:18:07  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id='captchas']
+ Sat, 15 Dec 2018 21:18:07  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:07  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.05秒
+ Sat, 15 Dec 2018 21:18:07  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：/html/body/div[4]/div/div/div[2]/div/div[3]/div/div/img
+ Sat, 15 Dec 2018 21:18:07  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:07  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.03秒
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py get_verification_code [ line:232 ] 识别的验证码为：9690
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py input_text [ line:148 ] =====执行输入操作======
+输入的数据为：9690
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@id='captchas']
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.04秒
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py click [ line:127 ] =====执行点击事件======
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py find_element [ line:84 ] 当前元素定位类型：xpath，当前查找的元素表达式为：//input[@class='btn btn_c']
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py find_element [ line:86 ] 开始等待元素在当前页面可见。
+ Sat, 15 Dec 2018 21:18:08  INFO BasePage.py wait_eleVisible [ line:37 ] 等待结束，等待时间长为:0.02秒

@@ -24,11 +24,19 @@ class Test_Shopping_cart:
         nick_shopping_cart=shopping_cart_page.get_nickname_of_shopping_cart()
         head_nickname=shopping_cart_page.get_head_nickname()
         shopping_cart_page.check_all_choose()
-        selected_goods=shopping_cart_page.get_selected_goods_num()
+        # selected_goods=shopping_cart_page.get_selected_goods_num()
         shopping_cart_beside_num=shopping_cart_page.nick_of_shopping_beside_num()
         assert str(shopping_cart_beside_num) == str(sku_num)
         assert head_nickname in nick_shopping_cart
-        assert str(selected_goods) == str(sku_num)
+        # assert str(selected_goods) == str(sku_num)
 
+    @pytest.mark.usefixtures('add_cookie_to_be_in_login_state')
+    @pytest.mark.gg
+    def test_get_cookies(self,add_cookie_to_be_in_login_state):
+        home=HomePage(add_cookie_to_be_in_login_state)
+        home.click_head_mall_button()
+        mall=MallPage(add_cookie_to_be_in_login_state)
+        mall.search_goods()
+        mall.click_goods_picture()
 
 

@@ -7,10 +7,12 @@ import time
 import os
 
 driver=None
+cookie_advanced_frontend=None
+cookie_imgcde=None
 
 @pytest.fixture
 def login_web():
-    global driver
+    global driver,cookie_advanced_frontend,cookie_imgcde
     # 打开浏览器
     driver = webdriver.Chrome()
     driver.maximize_window()
@@ -22,6 +24,21 @@ def login_web():
     home.head_login()
     yield driver
     #yield之后的代码，为环境清理工作
+    cookie_advanced_frontend=driver.get_cookie('advanced-frontend')
+    cookie_imgcde=driver.get_cookie('imgcde')
+    driver.quit()
+
+#给网页添加cookie，使不用登录就可以在登录状态
+@pytest.fixture
+def add_cookie_to_be_in_login_state():
+    global driver,cookie_advanced_frontend,cookie_imgcde
+    driver=webdriver.Chrome()
+    driver.maximize_window()
+    driver.get('http://pre.showbuy100.com/')
+    time.sleep(1)
+    driver.add_cookie(cookie_advanced_frontend)
+    driver.add_cookie(cookie_imgcde)
+    yield driver
     driver.quit()
 
 @pytest.fixture
@@ -34,27 +51,6 @@ def init_web():
     driver.get(url)
     yield driver
     # yield之后的代码，为环境清理工作
-    driver.quit()
-
-#给网页添加cookie，使不用登录就可以在登录状态
-@pytest.fixture
-def add_cookie_to_be_in_login_state(url,cookie_dict):
-    '''
-    :param url: 想要在登录状态的网页地址
-    :param cookie_dict: 比如{'name' : 'foo', 'value' : 'bar'}，如果cookie有多个，就用元组传入
-    :return:
-    '''
-    global driver
-    driver=webdriver.Chrome()
-    driver.maximize_window()
-    driver.get(url)
-    time.sleep(1)
-    if type(cookie_dict) == tuple:
-        for cookie in cookie_dict:
-            driver.add_cookie(cookie)
-    else:
-        driver.add_cookie(cookie_dict)
-    yield driver
     driver.quit()
 
 #往pytest的测试报告中，当失败的时候 ，添加截图

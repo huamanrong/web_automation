@@ -14,7 +14,8 @@ class GoodsDetailPage(BasePage):
     buy_now_button_xpath="//a[text()='立即购买']"
     #导航栏的购物车按钮
     head_shopping_cart_button="//li[@class='nav-cart']//a[contains(text(),'购物车')]"
-
+    #进店逛逛
+    enter_into_personal_page_xpath="//a[contains(@href,'/index.php?r=userinfo/homepage')]"
 
     #选择规格，选择数量为3
     def choose_specifications_and_num(self):
@@ -26,6 +27,14 @@ class GoodsDetailPage(BasePage):
     #点击加入购物车
     def add_shopping_cat(self):
         self.click(self.add_shopping_cart_button_xpath)
+
+    #点击立即购买
+    def click_buy_now(self):
+        self.click(self.buy_now_button_xpath)
+
+    #判断加入购物车能不能点击（加入购物车之后按钮不能点击）
+    def add_sopping_cart_button_is_enabled(self):
+        return self.find_element(self.add_shopping_cart_button_xpath).is_enabled()
 
     #点击导航栏的购物车按钮
     def click_head_shopping_cart(self):
