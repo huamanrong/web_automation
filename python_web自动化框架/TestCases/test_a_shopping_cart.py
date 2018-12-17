@@ -9,7 +9,7 @@ class Test_Shopping_cart:
 
     @pytest.mark.gg
     @pytest.mark.usefixtures('login_web')
-    def test_shopping_cart(self,login_web):
+    def test_a_shopping_cart(self,login_web):
         home=HomePage(login_web)
         home.click_head_mall_button()
         mall=MallPage(login_web)

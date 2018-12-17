@@ -13,7 +13,7 @@ class GoodsDetailPage(BasePage):
     #立即购买按钮
     buy_now_button_xpath="//a[text()='立即购买']"
     #导航栏的购物车按钮
-    head_shopping_cart_button="//li[@class='nav-cart']//a[contains(text(),'购物车')]"
+    head_shopping_cart_button="//a[contains(text(),'购物车')]"
     #进店逛逛
     enter_into_personal_page_xpath="//a[contains(@href,'/index.php?r=userinfo/homepage')]"
 

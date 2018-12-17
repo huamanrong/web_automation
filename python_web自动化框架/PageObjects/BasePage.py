@@ -211,16 +211,16 @@ class BasePage:
         :param img_shot_path: 截取验证码的截图所存放的路径
         :return:返回图形验证码的内容
         '''
-        self.driver.save_screenshot(r'C:\Users\10336\Desktop\git_file\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\gg.png')  #截取当前网页，该网页有我们需要的验证码
+        self.driver.save_screenshot(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\gg.png')  #截取当前网页，该网页有我们需要的验证码
         location = img_element.location  #获取验证码x,y轴坐标
         size=img_element.size  #获取验证码的长宽
         coord=(int(location['x']),int(location['y']),int(location['x']+size['width']),int(location['y']+size['height'])) #写成我们需要截取的位置坐标
-        i=Image.open(r'C:\Users\10336\Desktop\git_file\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\gg.png') #打开截图
+        i=Image.open(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\gg.png') #打开截图
         frame4=i.crop(coord)  #使用Image的crop函数，从截图中再次截取我们需要的区域
         image=frame4.point(lambda x: 0 if x<143 else 255)#处理图片上的每个像素点，使图片上每个点“非黑即白”
         borderImage = ImageOps.expand(image,border=20,fill='white')
-        borderImage.save(r'C:\Users\10336\Desktop\git_file\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\pp.png')
-        img = Image.open(r'C:\Users\10336\Desktop\git_file\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\pp.png')
+        borderImage.save(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\pp.png')
+        img = Image.open(r'D:\Backup\我的文档\GitHub\web_automation\python_web自动化框架\ScreenShot\shot_verification_code\pp.png')
         aa =  pytesseract.image_to_string(img)
         if aa == "":               #如果识别为空，则再一次识别
             img_element.click()
@@ -250,7 +250,7 @@ class BasePage:
     def switch_window(self,locator):
         #1.获取当前窗口数量，某个操作导致窗口增加，等待窗口增加之后切换到
         current_handles=self.driver.window_handles   #获取操作之前的窗口数量
-        self.driver.find_element_by_xpath(locator).click()  #某个操作来导致窗口数量增加
+        self.click(locator)  #某个操作来导致窗口数量增加
         #等待新窗口出现，等待方法：比较操作之后的窗口比之前的窗口数量多
         WebDriverWait(self.driver,10,1).until(EC.new_window_is_opened(current_handles))
         handles=self.driver.window_handles   #获取最新的窗口
