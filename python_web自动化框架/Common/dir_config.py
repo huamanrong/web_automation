@@ -18,8 +18,9 @@ config_dir =  os.path.join(base_dir,"Config")
 
 screenshot_dir = os.path.join(base_dir,"ScreenShot")
 
-shot_verification_code_dir=os.path.join(base_dir,"ScreenShot","shot_verification")
+shot_verification_code_dir=os.path.join(base_dir,"ScreenShot","shot_verification_code")
 
 shot_photo_path=os.path.join(shot_verification_code_dir,'shot.png')
+# print(shot_photo_path)
 
 save_photo_path=os.path.join(shot_verification_code_dir,'save.png')

@@ -42,6 +42,18 @@ class HomePage(BasePage):
     original_selected_video_ninth_title_xpath="/html/body/div[9]/div[4]/div/div[2]/div[2]/div/ul[3]/li[1]/div[2]/div[1]/a/p"
     #原创精选的第5个视频的视频标题
     original_selected_video_fifth_title_xpath="/html/body/div[9]/div[4]/div/div[2]/div[2]/div/ul[2]/li[1]/div[2]/div[1]/a/p"
+    #音乐分类的左边第一个视频的封面
+    music_classify_left_video_picture_xpath="//div[@class='theme']/div/div[2]//div[@class='p-big fl']//div[@class='v-img']"
+    #音乐分类的左边第一个视频的标题
+    music_classify_left_video_title_xpath="//div[@class='theme']/div/div[2]//div[@class='p-big fl']//div[@class='v-name']//p"
+    #音乐分类的左边第一个视频的作者
+    music_classify_left_video_authors_xpath="//div[@class='theme']/div/div[2]//div[@class='p-big fl']//div[@class='v-shop clearfix']//p"
+    #音乐分类的右边第一个视频的封面
+    music_classify_right_video_picture_xpath="//div[@class='theme']/div/div[2]//ul[@class='sift fl']//li[1]//div[@class='v-img']"
+    #音乐分类的右边第一个视频的标题
+    music_classify_right_video_title_xpath="//div[@class='theme']/div/div[2]//ul[@class='sift fl']//li[1]//div[@class='v-name']//p"
+    #音乐分类的右边第一个视频的作者
+    music_classify_right_video_authors_xpath="//div[@class='theme']/div/div[2]//ul[@class='sift fl']//li[1]//div[@class='v-shop clearfix']//p"
 
     #点击导航栏的登录按钮,并输入账号密码
     def click_head_login_button(self,use,password):
@@ -73,14 +85,9 @@ class HomePage(BasePage):
         self.driver.switch_to.window(handles[-1])
         logging.info('窗口切换成功')
 
-    #点击原创精选视频的标题,并切换到新窗口
+    #点击原创精选视频的标题,并切换到新窗口(这里有bug，竟然不跳转)
     def click_original_selected_video_title(self):
-        current_handles=self.driver.window_handles
         self.click(self.original_selected_video_title,scroll=True)
-        self.wait_new_window_is_opened(current_handles)
-        handles=self.driver.window_handles
-        self.driver.switch_to.window(handles[-1])
-        logging.info('窗口切换成功')
 
     #点击原创精选视频的左箭头
     def click_original_selected_left_arrow(self):
@@ -108,7 +115,35 @@ class HomePage(BasePage):
         elif num == 1:
             return self.get_text(self.original_selected_video_title,scroll=True)
 
+    #点击音乐分类左边第一个视频的封面，并切换页面
+    def click_music_classify_left_video_picture(self):
+        self.switch_window(self.music_classify_left_video_picture_xpath)
 
+    #点击音乐分类左边第一个视频的标题
+    def click_music_classify_left_video_title(self):
+        self.click(self.music_classify_left_video_title_xpath)
+
+    #获取音乐分类左边第一个视频的标题和作者
+    def get_music_classify_left_video_title_authors(self):
+        dict_1={}
+        dict_1['title']=self.get_text(self.music_classify_left_video_title_xpath)
+        dict_1['authors']=self.get_text(self.music_classify_left_video_authors_xpath)
+        return dict_1
+
+    #点击音乐分类右边第一个视频的封面，并切换页面
+    def click_music_classify_right_video_picture(self):
+        self.switch_window(self.music_classify_right_video_picture_xpath)
+
+    #点击音乐分类右边第一个视频的标题
+    def click_music_classify_right_video_title(self):
+        self.click(self.music_classify_right_video_title_xpath)
+
+    #获取音乐分类右边第一个视频的标题和作者
+    def get_music_classify_right_video_title_authors(self):
+        dict_1={}
+        dict_1['title']=self.get_text(self.music_classify_right_video_title_xpath)
+        dict_1['authors']=self.get_text(self.music_classify_right_video_authors_xpath)
+        return dict_1
 
 
 
