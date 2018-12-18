@@ -121,12 +121,12 @@ class HomePage(BasePage):
 
     #点击音乐分类左边第一个视频的标题
     def click_music_classify_left_video_title(self):
-        self.click(self.music_classify_left_video_title_xpath)
+        self.click(self.music_classify_left_video_title_xpath,scroll=True)
 
     #获取音乐分类左边第一个视频的标题和作者
     def get_music_classify_left_video_title_authors(self):
         dict_1={}
-        dict_1['title']=self.get_text(self.music_classify_left_video_title_xpath)
+        dict_1['title']=self.get_text(self.music_classify_left_video_title_xpath,scroll=True)
         dict_1['authors']=self.get_text(self.music_classify_left_video_authors_xpath)
         return dict_1
 
@@ -136,12 +136,12 @@ class HomePage(BasePage):
 
     #点击音乐分类右边第一个视频的标题
     def click_music_classify_right_video_title(self):
-        self.click(self.music_classify_right_video_title_xpath)
+        self.switch_window(self.music_classify_right_video_title_xpath)
 
     #获取音乐分类右边第一个视频的标题和作者
     def get_music_classify_right_video_title_authors(self):
         dict_1={}
-        dict_1['title']=self.get_text(self.music_classify_right_video_title_xpath)
+        dict_1['title']=self.get_text(self.music_classify_right_video_title_xpath,scroll=True)
         dict_1['authors']=self.get_text(self.music_classify_right_video_authors_xpath)
         return dict_1
 

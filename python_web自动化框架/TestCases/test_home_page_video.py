@@ -57,11 +57,53 @@ class Test_Home_Page_video:
         fifth_title=home.get_original_selected_ninth_or_fifth_title(5)
         assert first_title != ninth_title !=fifth_title
 
-    #3.点击首页的视频分类的音乐分类，点击第一个视频的视频 封面 查看视频(会新增页面)  视频标题、作者是一样的
-    def test_(self):
-        pass
+    #点击首页的视频分类的音乐分类，点击第一个视频的视频 封面 查看视频(会新增页面)  视频标题、作者是一样的
+    @pytest.mark.gg
+    @pytest.mark.usefixtures('add_cookie_to_be_in_login_state')
+    def test_click_music_classify_left_video_picture(self,add_cookie_to_be_in_login_state):
+        home=HomePage(add_cookie_to_be_in_login_state)
+        dict_home=home.get_music_classify_left_video_title_authors()
+        home.click_music_classify_left_video_picture()
+        video_details=VideoDetailPage(add_cookie_to_be_in_login_state)
+        dict_video=video_details.get_video_title_authors_picture()
+        assert dict_home['title'] == dict_video['title']
+        assert dict_home['authors'] == dict_video['authors']
 
+    #点击首页的视频分类的音乐分类，点击第一个视频的视频 标题 查看视频(不会新增页面) 视频标题、作者是一样的
+    @pytest.mark.gg
+    @pytest.mark.usefixtures('add_cookie_to_be_in_login_state')
+    def test_click_music_classify_left_video_title(self,add_cookie_to_be_in_login_state):
+        home=HomePage(add_cookie_to_be_in_login_state)
+        dict_home=home.get_music_classify_left_video_title_authors()
+        home.click_music_classify_left_video_title()
+        video_details=VideoDetailPage(add_cookie_to_be_in_login_state)
+        dict_video=video_details.get_video_title_authors_picture()
+        assert dict_home['title'] == dict_video['title']
+        assert dict_home['authors'] == dict_video['authors']
 
+    #点击首页的视频分类的音乐分类，点击右边第一个视频的视频 封面 查看视频(会新增页面)  验证视频时长、视频标题、作者，视频封面是一样的
+    @pytest.mark.gg
+    @pytest.mark.usefixtures('add_cookie_to_be_in_login_state')
+    def test_click_music_classify_right_video_picture(self,add_cookie_to_be_in_login_state):
+        home=HomePage(add_cookie_to_be_in_login_state)
+        dict_home=home.get_music_classify_right_video_title_authors()
+        home.click_music_classify_right_video_picture()
+        video_details=VideoDetailPage(add_cookie_to_be_in_login_state)
+        dict_video=video_details.get_video_title_authors_picture()
+        assert dict_home['title'] == dict_video['title']
+        assert dict_home['authors'] == dict_video['authors']
+
+    #点击首页的视频分类的音乐分类，点击右边第一个视频的视频 标题 查看视频(会新增页面)  验证视频时长、视频标题、作者，视频封面是一样的
+    @pytest.mark.gg
+    @pytest.mark.usefixtures('add_cookie_to_be_in_login_state')
+    def test_click_music_classify_right_video_title(self,add_cookie_to_be_in_login_state):
+        home=HomePage(add_cookie_to_be_in_login_state)
+        dict_home=home.get_music_classify_right_video_title_authors()
+        home.click_music_classify_right_video_title()
+        video_details=VideoDetailPage(add_cookie_to_be_in_login_state)
+        dict_video=video_details.get_video_title_authors_picture()
+        assert dict_home['title'] == dict_video['title']
+        assert dict_home['authors'] == dict_video['authors']
 
 
 
