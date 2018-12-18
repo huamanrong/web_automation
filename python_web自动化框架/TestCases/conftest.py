@@ -18,10 +18,11 @@ def login_web():
     driver.maximize_window()
     # 1、访问登陆页面
     driver.get(url_xb)
-    # driver.set_page_load_timeout(20)
     home=HomePage(driver)
     home.click_head_login_button(telephone,pwd)
     home.head_login()
+    driver.set_page_load_timeout(5)
+    driver.set_script_timeout(5)
     yield driver
     #yield之后的代码，为环境清理工作
     cookie_advanced_frontend=driver.get_cookie('advanced-frontend')

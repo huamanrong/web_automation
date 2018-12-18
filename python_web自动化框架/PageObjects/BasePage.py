@@ -135,6 +135,7 @@ class BasePage:
             self.save_screenshots()
             raise e
 
+    #输入操作
     def input_text(self,locator,text,by=By.XPATH,wait_times=40,type="visible",scroll=False):
         '''
         :param locator:
@@ -156,6 +157,7 @@ class BasePage:
             self.save_screenshots()
             raise e
 
+    #获取元素的文本内容
     def get_text(self,locator,by=By.XPATH,wait_times=40,type="visible",scroll=False):
         logging.info("=====获取元素的文本内容======")
         ele = self.find_element(locator,by,wait_times,type)
