@@ -2,6 +2,10 @@ __author__ = '10336'
 from PageObjects.BasePage import BasePage
 import time
 class VideoDetailPage(BasePage):
+    #导航栏昵称
+    head_nickname_xpath="//li[@class='Unick']/a[@href='/personal-order/home']"
+    #导航栏的个人中心
+    head_personal_xpath="//ol[@class='nk-cont']//a[@href='/personal-order/home']"
     #视频标题
     video_title_xpath="//div[@class='v-tit']/h2"
     #视频封面图
