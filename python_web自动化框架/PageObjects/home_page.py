@@ -26,7 +26,7 @@ class HomePage(BasePage):
     #登录弹窗上面的登录按钮
     window_login_button="//input[@class='btn btn_c']"
     #原创精选的第一个视频的视频封面
-    original_selected_video_picture="//div[@class='tab-cont clearfix']//div[@class='v-img']"
+    original_selected_video_picture_xpath="//div[@class='tab-cont clearfix']//div[@class='v-img']"
     #原创精选的第一个视频的视频标题
     # original_selected_video_title="//div[@class='tab-cont clearfix']//div[@class='v-name']"
     original_selected_video_title="/html/body/div[9]/div[4]/div/div[2]/div[2]/div/ul[1]/li[1]/div[2]/div[1]"
@@ -79,7 +79,7 @@ class HomePage(BasePage):
     #点击原创精选视频的封面图(会新增页面)，并切换到新窗口
     def click_original_selected_video_picture(self):
         current_handles=self.driver.window_handles
-        self.click(self.original_selected_video_picture,scroll=True)
+        self.click(self.original_selected_video_picture_xpath,scroll=True)
         self.wait_new_window_is_opened(current_handles)
         handles=self.driver.window_handles
         self.driver.switch_to.window(handles[-1])
@@ -102,7 +102,7 @@ class HomePage(BasePage):
         dict_1={}
         dict_1['title']=self.get_text(self.original_selected_video_title,scroll=True)
         dict_1['authors']=self.get_text(self.original_selected_video_author,scroll=True)
-        dict_1['picture']=self.get_element_attribute(self.original_selected_video_picture,'src',scroll=True)
+        dict_1['picture']=self.get_element_attribute(self.original_selected_video_picture_xpath,'src',scroll=True)
         dict_1['time']=self.get_text(self.original_selected_video_time,scroll=True)
         return dict_1
 

@@ -27,6 +27,8 @@ class MyCollectPage(BasePage):
     first_video_delete_button_xpath="//div[@class='v-list wrap']/ul[@class='clearfix']/li[1]//i[@class='det']"
     #第一个视频的作者
     first_video_authors="//div[@class='v-list wrap']/ul[@class='clearfix']/li[1]//p[@class='sp-name']"
+    #删除商品/视频之后的确定按钮
+    delete_sure_button="//div[@class='popUp-btn']"
 
     #计算有多少个商品
     def count_goods_num(self):
@@ -48,6 +50,11 @@ class MyCollectPage(BasePage):
         dict_1['title']=self.get_text(self.first_goods_title_xpath)
         dict_1['tamount']=self.get_text(self.first_goods_amount_xpath)
         return dict_1
+
+    #点击删除商品按钮，及点击确定
+    def delete_goods(self):
+        self.click(self.first_goods_delete_button_xpath)
+        self.click(self.delete_sure_button)
 
     #点击视频菜单
     def click_menu_video(self):

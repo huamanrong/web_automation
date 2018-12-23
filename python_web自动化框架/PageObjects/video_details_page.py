@@ -53,8 +53,6 @@ class VideoDetailPage(BasePage):
     #一级评论的图片 获取class的属性就行
     level_1_comments_content_picture_xpath="//ul[@class='hot-comments']/li[1]//div[@class='limitimgbox']/img"
 
-
-
     #获取视频标题，作者，图片
     def get_video_title_authors_picture(self):
         dict_1={}
@@ -68,9 +66,12 @@ class VideoDetailPage(BasePage):
         self.click(self.play_video_button_xpath)
         return self.get_text(self.video_time_xpath)
 
-    #点击收藏按钮,并获取class的属性
-    def click_collect_button_get_attribute(self):
+    #点击收藏按钮
+    def click_collect_button(self):
         self.click(self.collect_button_xpath)
+
+    #获取收藏class的属性
+    def get_collect_attribute(self):
         return self.get_element_attribute(self.collect_button_xpath,'class')
 
     #点击关注按钮并获取关注状态
@@ -100,10 +101,11 @@ class VideoDetailPage(BasePage):
 
     #发表一级评论带图片
     def publish_level_1_comments_with_picture(self,word,picture_path):
-        self.input_text(self.level_1_comments_input_box_xpath,word,scroll=True)
         self.click(self.level_1_comments_add_picture_xpath,scroll=True)
-        self.upload_file(picture_path)
-        self.click(self.level_1_publish_comments_button)
+        self.input_text(self.level_1_comments_input_box_xpath,word,scroll=True)
+        time.sleep(2)
+        # self.upload_file(picture_path)
+        # self.click(self.level_1_publish_comments_button)
 
     #发表一级评论带表情
     def publish_level_1_comments_with_face(self,word):
