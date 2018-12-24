@@ -101,8 +101,9 @@ class VideoDetailPage(BasePage):
 
     #发表一级评论带图片
     def publish_level_1_comments_with_picture(self,word,picture_path):
-        self.click(self.level_1_comments_add_picture_xpath,scroll=True)
         self.input_text(self.level_1_comments_input_box_xpath,word,scroll=True)
+        time.sleep(1)
+        self.driver.find_element_by_xpath(self.level_1_comments_add_picture_xpath).click()
         time.sleep(2)
         self.upload_file(picture_path)
         self.click(self.level_1_publish_comments_button)

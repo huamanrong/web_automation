@@ -9,6 +9,9 @@
   "TestCases/test_home_page_video.py::Test_Home_Page_video::()::test_click_music_classify_right_video_picture",
   "TestCases/test_home_page_video.py::Test_Home_Page_video::()::test_click_music_classify_right_video_title",
   "TestCases/test_invest.py::Test_Invest::()::test_invest_success",
+  "TestCases/test_login.py::Test_Login::()::test_login_success",
+  "TestCases/test_login.py::Test_Login::()::test_login_noData[testDatas0]",
+  "TestCases/test_login.py::Test_Login::()::test_login_noData[testDatas1]",
   "TestCases/test_video_detail.py::Test_video_details::()::test_collect_button",
   "TestCases/test_video_detail.py::Test_video_details::()::test_click_collect_button",
   "TestCases/test_video_detail.py::Test_video_details::()::test_comment_with_picture"
