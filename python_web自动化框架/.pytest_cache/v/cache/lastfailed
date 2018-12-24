@@ -1,6 +1,7 @@
 {
   "TestCases/test_home_page_video.py::Test_Home_Page_video::()::test_click_music_classify_right_video_title": true,
   "TestCases/test_invest.py::Test_Invest::()::test_invest_success": true,
+  "TestCases/test_login.py": true,
   "TestCases/test_login.py::Test_Login::()::test_login_success": true,
   "TestCases/test_video_detail.py::Test_video_details::()::test_collect_button": true,
   "TestCases/test_video_detail.py::Test_video_details::()::test_comment_with_picture": true
