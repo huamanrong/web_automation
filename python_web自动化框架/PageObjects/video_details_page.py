@@ -31,7 +31,7 @@ class VideoDetailPage(BasePage):
     #一级评论的字数统计
     level_1_word_num="//div[@class='add-comment clearfix']//span[@class='fontnum']"
     #一级评论添加图片的小图标
-    level_1_comments_add_picture_xpath="//input[@name='file']"
+    level_1_comments_add_picture_xpath="//input[@class='uploadimgbtn']"
     #一级评论添加表情的小图标
     level_1_comments_add_face_xpath="//span[@class='loadexpressionbtn']"
     #第三个表情（笑哭）
@@ -101,11 +101,12 @@ class VideoDetailPage(BasePage):
 
     #发表一级评论带图片
     def publish_level_1_comments_with_picture(self,word,picture_path):
-        self.click(self.level_1_comments_add_picture_xpath,scroll=True)
         self.input_text(self.level_1_comments_input_box_xpath,word,scroll=True)
+        time.sleep(1)
+        self.driver.find_element_by_xpath(self.level_1_comments_add_picture_xpath).click()
         time.sleep(2)
-        # self.upload_file(picture_path)
-        # self.click(self.level_1_publish_comments_button)
+        self.upload_file(picture_path)
+        self.click(self.level_1_publish_comments_button)
 
     #发表一级评论带表情
     def publish_level_1_comments_with_face(self,word):
